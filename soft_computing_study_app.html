@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Soft Computing — Study App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #18181f;
+    --surface: #1e1e28;
+    --surface2: #252535;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --text: #e8e8f0;
+    --text2: #9898b0;
+    --text3: #5a5a75;
+    --accent: #7c6aff;
+    --accent2: #5c4de8;
+    --gold: #f0c060;
+    --gold2: #e09020;
+    --teal: #3de8c0;
+    --teal2: #1ab894;
+    --coral: #ff6b6b;
+    --green: #5ddd8a;
+    --blue: #5ab4ff;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,10,15,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    height: 60px;
+  }
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .logo-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; }
+  .course-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    background: rgba(124,106,255,0.12);
+    border: 1px solid rgba(124,106,255,0.25);
+    padding: 3px 10px;
+    border-radius: 100px;
+    letter-spacing: 0.05em;
+  }
+  .header-nav { display: flex; gap: 4px; }
+  .nav-btn {
+    background: none; border: none; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    color: var(--text2);
+    padding: 6px 14px;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s;
+  }
+  .nav-btn:hover { background: var(--surface); color: var(--text); }
+  .nav-btn.active { background: var(--surface2); color: var(--text); }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 4rem 2rem 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse, rgba(124,106,255,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--teal);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.6) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero p {
+    color: var(--text2);
+    font-size: 1rem;
+    font-weight: 300;
+    max-width: 480px;
+    margin: 0 auto 2rem;
+    line-height: 1.7;
+  }
+  .stats-row {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  .stat { text-align: center; }
+  .stat-n {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.6rem;
+    color: var(--accent);
+  }
+  .stat-l { font-size: 0.75rem; color: var(--text3); margin-top: 2px; }
+
+  /* ── TABS ── */
+  .tabs-bar {
+    display: flex;
+    gap: 0;
+    padding: 0 2rem;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+  }
+  .tab {
+    background: none; border: none; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text3);
+    padding: 14px 20px;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 7px;
+  }
+  .tab:hover { color: var(--text2); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-icon { font-size: 0.9rem; }
+  .tab-count {
+    background: var(--surface);
+    color: var(--text3);
+    font-size: 0.65rem;
+    padding: 2px 6px;
+    border-radius: 100px;
+  }
+  .tab.active .tab-count { background: rgba(124,106,255,0.15); color: var(--accent); }
+
+  /* ── MAIN LAYOUT ── */
+  .main { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+
+  /* ── SECTION PANELS ── */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* ── MODULE CARDS ── */
+  .module-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+  .module-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .module-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: var(--card-accent, var(--accent));
+  }
+  .module-card:hover { border-color: var(--border2); transform: translateY(-2px); background: var(--surface2); }
+  .card-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    color: var(--badge-color, var(--accent));
+    background: var(--badge-bg, rgba(124,106,255,0.1));
+    border: 1px solid var(--badge-border, rgba(124,106,255,0.2));
+    padding: 3px 8px;
+    border-radius: 100px;
+    display: inline-block;
+    margin-bottom: 0.75rem;
+  }
+  .card-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem; }
+  .card-desc { font-size: 0.82rem; color: var(--text2); line-height: 1.6; margin-bottom: 1rem; }
+  .card-topics { display: flex; flex-wrap: wrap; gap: 5px; }
+  .topic-pill {
+    font-size: 0.7rem; color: var(--text3);
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 3px 8px;
+    border-radius: 100px;
+  }
+
+  /* ── ACCORDION NOTES ── */
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1; height: 1px;
+    background: var(--border);
+  }
+  .accordion { display: flex; flex-direction: column; gap: 8px; }
+  .acc-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+  .acc-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 18px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border: none; background: none; width: 100%; text-align: left;
+  }
+  .acc-header:hover { background: rgba(255,255,255,0.03); }
+  .acc-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem; color: var(--text3);
+    background: var(--bg3);
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .acc-label { font-weight: 500; font-size: 0.9rem; color: var(--text); flex: 1; }
+  .acc-arrow { color: var(--text3); font-size: 0.8rem; transition: transform 0.25s; }
+  .acc-item.open .acc-arrow { transform: rotate(180deg); }
+  .acc-body {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.35s ease;
+    border-top: 1px solid transparent;
+  }
+  .acc-item.open .acc-body {
+    max-height: 3000px;
+    border-top-color: var(--border);
+  }
+  .acc-content { padding: 18px; font-size: 0.875rem; line-height: 1.75; color: var(--text2); }
+  .acc-content h4 { font-family: 'Syne', sans-serif; font-size: 0.85rem; color: var(--text); margin: 1rem 0 0.5rem; font-weight: 600; }
+  .acc-content h4:first-child { margin-top: 0; }
+  .acc-content p { margin-bottom: 0.75rem; }
+  .acc-content ul { padding-left: 1.2rem; margin-bottom: 0.75rem; }
+  .acc-content li { margin-bottom: 0.3rem; }
+  .acc-content code, .formula-block {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    background: var(--bg);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    padding: 12px 14px;
+    display: block;
+    margin: 0.75rem 0;
+    white-space: pre-wrap;
+    color: var(--teal);
+    line-height: 1.6;
+  }
+  .acc-content .inline-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--gold);
+    display: inline;
+  }
+  .highlight-box {
+    background: rgba(124,106,255,0.07);
+    border: 1px solid rgba(124,106,255,0.2);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    margin: 0.75rem 0;
+    font-size: 0.82rem;
+  }
+  .highlight-box.gold {
+    background: rgba(240,192,96,0.07);
+    border-color: rgba(240,192,96,0.2);
+    border-left-color: var(--gold);
+  }
+  .highlight-box.teal {
+    background: rgba(61,232,192,0.07);
+    border-color: rgba(61,232,192,0.2);
+    border-left-color: var(--teal);
+  }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 0.75rem 0; }
+  .mini-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    font-size: 0.8rem;
+  }
+  .mini-card-label { font-size: 0.7rem; color: var(--text3); margin-bottom: 4px; font-family: 'JetBrains Mono', monospace; }
+
+  /* ── FORMULA SHEET ── */
+  .formula-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+  .formula-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+  }
+  .formula-cat {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.1em;
+    color: var(--text3); text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+  .formula-name { font-weight: 500; font-size: 0.9rem; margin-bottom: 0.5rem; }
+  .formula-eq {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    color: var(--teal);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 0.5rem;
+    white-space: pre-wrap;
+    line-height: 1.5;
+  }
+  .formula-note { font-size: 0.75rem; color: var(--text3); line-height: 1.5; }
+
+  /* ── Q&A ── */
+  .qa-grid { display: flex; flex-direction: column; gap: 12px; }
+  .qa-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .qa-q {
+    padding: 16px 20px;
+    cursor: pointer;
+    display: flex; gap: 12px; align-items: flex-start;
+    border: none; background: none; width: 100%; text-align: left;
+    transition: background 0.2s;
+  }
+  .qa-q:hover { background: rgba(255,255,255,0.02); }
+  .qa-qnum {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem; color: var(--accent);
+    background: rgba(124,106,255,0.1);
+    border: 1px solid rgba(124,106,255,0.2);
+    min-width: 32px; height: 22px;
+    border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .qa-qtext { font-size: 0.88rem; font-weight: 500; flex: 1; line-height: 1.4; }
+  .qa-marks {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem; color: var(--gold);
+    background: rgba(240,192,96,0.1);
+    border: 1px solid rgba(240,192,96,0.2);
+    padding: 3px 8px;
+    border-radius: 100px;
+    flex-shrink: 0;
+    align-self: flex-start;
+    margin-top: 1px;
+  }
+  .qa-ans {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.35s ease;
+    border-top: 1px solid transparent;
+  }
+  .qa-card.open .qa-ans { max-height: 2000px; border-top-color: var(--border); }
+  .qa-ans-body { padding: 18px 20px; font-size: 0.86rem; line-height: 1.75; color: var(--text2); }
+  .qa-ans-body strong { color: var(--text); font-weight: 500; }
+  .ans-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.06em;
+    color: var(--teal);
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    display: block;
+  }
+
+  /* ── FILTER BAR ── */
+  .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .filter-btn {
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text2); cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem; font-weight: 500;
+    padding: 6px 14px; border-radius: 100px;
+    transition: all 0.2s;
+  }
+  .filter-btn:hover { border-color: var(--border2); color: var(--text); }
+  .filter-btn.active { background: rgba(124,106,255,0.15); border-color: rgba(124,106,255,0.35); color: var(--accent); }
+
+  /* ── EXAM TIPS ── */
+  .tips-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 2rem; }
+  .tip-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+  }
+  .tip-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+  .tip-title { font-family: 'Syne', sans-serif; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; }
+  .tip-body { font-size: 0.82rem; color: var(--text2); line-height: 1.6; }
+  .priority-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 2rem; }
+  .priority-item {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+  }
+  .priority-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.05em;
+    padding: 4px 10px; border-radius: 100px;
+    flex-shrink: 0; min-width: 60px; text-align: center;
+  }
+  .p-high { background: rgba(93,221,138,0.12); color: var(--green); border: 1px solid rgba(93,221,138,0.25); }
+  .p-med { background: rgba(240,192,96,0.12); color: var(--gold); border: 1px solid rgba(240,192,96,0.25); }
+  .p-low { background: rgba(90,180,255,0.12); color: var(--blue); border: 1px solid rgba(90,180,255,0.25); }
+  .priority-text { font-size: 0.86rem; }
+  .priority-marks { margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--text3); }
+  .time-table {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden; margin-bottom: 2rem;
+  }
+  .time-row { display: flex; align-items: center; padding: 12px 18px; border-bottom: 1px solid var(--border); gap: 16px; }
+  .time-row:last-child { border-bottom: none; }
+  .time-section { font-weight: 500; font-size: 0.88rem; flex: 1; }
+  .time-marks { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--gold); }
+  .time-mins {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+    color: var(--text2); background: var(--bg3);
+    padding: 4px 10px; border-radius: 100px;
+    min-width: 80px; text-align: center;
+  }
+
+  /* ── SEARCH ── */
+  .search-bar {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    margin-bottom: 1.5rem;
+  }
+  .search-bar input {
+    background: none; border: none; outline: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; color: var(--text);
+    flex: 1;
+  }
+  .search-bar input::placeholder { color: var(--text3); }
+  .search-icon { color: var(--text3); font-size: 1rem; }
+
+  /* ── PROGRESS CHECKLIST ── */
+  .checklist { display: flex; flex-direction: column; gap: 8px; }
+  .check-item {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px; cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .check-item:hover { border-color: var(--border2); }
+  .check-item.done { opacity: 0.6; }
+  .check-box {
+    width: 18px; height: 18px; border-radius: 5px;
+    border: 1.5px solid var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-size: 0.7rem; color: var(--accent);
+    transition: all 0.2s;
+  }
+  .check-item.done .check-box { background: var(--accent); border-color: var(--accent); }
+  .check-text { font-size: 0.85rem; }
+  .check-item.done .check-text { text-decoration: line-through; color: var(--text3); }
+  .progress-bar-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1.5rem; }
+  .progress-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .progress-label-text { font-size: 0.82rem; color: var(--text2); }
+  .progress-pct { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--accent); }
+  .progress-bar { height: 6px; background: var(--bg3); border-radius: 100px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent2), var(--accent)); border-radius: 100px; transition: width 0.5s ease; }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center; padding: 2rem;
+    font-size: 0.75rem; color: var(--text3);
+    border-top: 1px solid var(--border);
+    margin-top: 3rem;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .main { padding: 1rem; }
+    .hero { padding: 2rem 1rem; }
+    .header { padding: 0 1rem; }
+    .two-col { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo">
+    <div class="logo-dot"></div>
+    Soft Computing
+  </div>
+  <nav class="header-nav">
+    <span class="course-badge">BCSE 0103</span>
+  </nav>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <span class="hero-tag">Complete Study Guide</span>
+  <h1>Master Soft Computing</h1>
+  <p>Neural Networks · Fuzzy Logic · Genetic Algorithms — everything you need for your exam in one place.</p>
+  <div class="stats-row">
+    <div class="stat"><div class="stat-n">2</div><div class="stat-l">Modules</div></div>
+    <div class="stat"><div class="stat-n">40+</div><div class="stat-l">Key Formulas</div></div>
+    <div class="stat"><div class="stat-n">33+</div><div class="stat-l">Practice Q&A</div></div>
+    <div class="stat"><div class="stat-n">80</div><div class="stat-l">Total Marks</div></div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs-bar">
+  <button class="tab active" onclick="switchTab('overview')">
+    <span class="tab-icon">◈</span> Overview
+  </button>
+  <button class="tab" onclick="switchTab('notes')">
+    <span class="tab-icon">◉</span> Study Notes
+    <span class="tab-count">8 units</span>
+  </button>
+  <button class="tab" onclick="switchTab('formulas')">
+    <span class="tab-icon">∑</span> Formula Sheet
+    <span class="tab-count">24</span>
+  </button>
+  <button class="tab" onclick="switchTab('qa')">
+    <span class="tab-icon">?</span> Q &amp; A Bank
+    <span class="tab-count">33</span>
+  </button>
+  <button class="tab" onclick="switchTab('exam')">
+    <span class="tab-icon">★</span> Exam Prep
+  </button>
+  <button class="tab" onclick="switchTab('progress')">
+    <span class="tab-icon">◐</span> Progress
+  </button>
+</div>
+
+<main class="main">
+
+  <!-- ─── OVERVIEW ─── -->
+  <section id="panel-overview" class="panel active">
+    <p class="section-title">Course Modules</p>
+    <div class="module-grid">
+      <div class="module-card" style="--card-accent: #7c6aff;" onclick="switchTab('notes')">
+        <span class="card-badge" style="--badge-color:#7c6aff;--badge-bg:rgba(124,106,255,0.1);--badge-border:rgba(124,106,255,0.25);">MODULE I</span>
+        <div class="card-title">Neural Networks &amp; Fuzzy Basics</div>
+        <div class="card-desc">From biological neurons to backpropagation, perceptrons to associative memory networks.</div>
+        <div class="card-topics">
+          <span class="topic-pill">ANN</span>
+          <span class="topic-pill">Perceptron</span>
+          <span class="topic-pill">MLP</span>
+          <span class="topic-pill">Backprop</span>
+          <span class="topic-pill">Hopfield</span>
+          <span class="topic-pill">ADALINE</span>
+          <span class="topic-pill">Fuzzy Sets</span>
+        </div>
+      </div>
+      <div class="module-card" style="--card-accent: #3de8c0;" onclick="switchTab('notes')">
+        <span class="card-badge" style="--badge-color:#3de8c0;--badge-bg:rgba(61,232,192,0.1);--badge-border:rgba(61,232,192,0.25);">MODULE II</span>
+        <div class="card-title">Advanced Fuzzy Logic &amp; Genetic Algorithms</div>
+        <div class="card-desc">Fuzzy inference systems, rule-based reasoning, and evolution-inspired optimization.</div>
+        <div class="card-topics">
+          <span class="topic-pill">Fuzzy Rules</span>
+          <span class="topic-pill">T-Norms</span>
+          <span class="topic-pill">Defuzzification</span>
+          <span class="topic-pill">GA</span>
+          <span class="topic-pill">Crossover</span>
+          <span class="topic-pill">Mutation</span>
+          <span class="topic-pill">GP</span>
+        </div>
+      </div>
+      <div class="module-card" style="--card-accent: #f0c060;" onclick="switchTab('formulas')">
+        <span class="card-badge" style="--badge-color:#f0c060;--badge-bg:rgba(240,192,96,0.1);--badge-border:rgba(240,192,96,0.25);">REFERENCE</span>
+        <div class="card-title">Formula Cheat Sheet</div>
+        <div class="card-desc">All key equations for Neural Networks, Fuzzy Logic, and Genetic Algorithms in one view.</div>
+        <div class="card-topics">
+          <span class="topic-pill">Equations</span>
+          <span class="topic-pill">Derivations</span>
+          <span class="topic-pill">Quick Reference</span>
+        </div>
+      </div>
+      <div class="module-card" style="--card-accent: #ff6b6b;" onclick="switchTab('exam')">
+        <span class="card-badge" style="--badge-color:#ff6b6b;--badge-bg:rgba(255,107,107,0.1);--badge-border:rgba(255,107,107,0.25);">EXAM PREP</span>
+        <div class="card-title">Exam Strategy &amp; Priority Topics</div>
+        <div class="card-desc">Time management, common mistakes, priority topics, and last-minute revision checklist.</div>
+        <div class="card-topics">
+          <span class="topic-pill">High Priority</span>
+          <span class="topic-pill">Time Plan</span>
+          <span class="topic-pill">Mistakes</span>
+          <span class="topic-pill">Tips</span>
+        </div>
+      </div>
+    </div>
+
+    <br>
+    <p class="section-title">Key Concepts at a Glance</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;">
+      <div class="mini-card">
+        <div class="mini-card-label">soft computing</div>
+        <div style="font-size:0.82rem;color:var(--text2);line-height:1.5;">Tolerates imprecision · uncertainty · approximation for human-like problem solving</div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-card-label">perceptron limit</div>
+        <div style="font-size:0.82rem;color:var(--text2);line-height:1.5;">Only linearly separable problems · fails XOR · needs MLP for non-linear</div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-card-label">backpropagation</div>
+        <div style="font-size:0.82rem;color:var(--text2);line-height:1.5;">Gradient descent on error · chain rule · needs differentiable activation</div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-card-label">fuzzy logic</div>
+        <div style="font-size:0.82rem;color:var(--text2);line-height:1.5;">Membership degrees 0–1 · AND=min · OR=max · NOT=1-x</div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-card-label">genetic algorithm</div>
+        <div style="font-size:0.82rem;color:var(--text2);line-height:1.5;">Selection → Crossover → Mutation → Replacement → repeat</div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-card-label">hopfield network</div>
+        <div style="font-size:0.82rem;color:var(--text2);line-height:1.5;">Recurrent · symmetric weights · auto-associative memory · capacity ≈0.15n</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── NOTES ─── -->
+  <section id="panel-notes" class="panel">
+    <p class="section-title">Module I — Neural Networks &amp; Fuzzy Basics</p>
+    <div class="accordion" id="acc-mod1">
+
+      <div class="acc-item" data-topic="nn">
+        <button class="acc-header" onclick="toggleAcc(this)">
+          <span class="acc-num">1</span>
+          <span class="acc-label">Introduction to Soft Computing &amp; ANN</span>
+          <span class="acc-arrow">▾</span>
+        </button>
+        <div class="acc-body"><div class="acc-content">
+          <h4>What is Soft Computing?</h4>
+          <p>A collection of computational techniques that mimic human intelligence, tolerating imprecision, uncertainty, and partial truth to achieve robust, low-cost solutions.</p>
+          <div class="two-col">
+            <div class="mini-card"><div class="mini-card-label">ANN</div>Inspired by biological neurons</div>
+            <div class="mini-card"><div class="mini-card-label">Fuzzy Logic</div>Handles vagueness &amp; uncertainty</div>
+            <div class="mini-card"><div class="mini-card-label">Genetic Algo.</div>Evolution-based optimization</div>
+            <div class="mini-card"><div class="mini-card-label">Hybrid</div>Combinations of above</div>
+          </div>
+          <h4>Artificial Neuron Model</h4>
+          <p>Inspired by biological neurons — dendrites → inputs, synaptic weight, soma → summation, axon → output.</p>
+          <code>NET = Σ(wᵢ · xᵢ) + b
+Output y = f(NET)</code>
+          <h4>Activation Functions</h4>
+          <ul>
+            <li><strong>Step:</strong> Binary {0,1} — non-differentiable, used in Perceptron</li>
+            <li><strong>Sigmoid:</strong> <span class="inline-code">1/(1+e^-x)</span> — output (0,1), differentiable, used in backprop</li>
+            <li><strong>Tanh:</strong> output (−1,1) — stronger gradients than sigmoid</li>
+            <li><strong>ReLU:</strong> <span class="inline-code">max(0,x)</span> — computationally efficient, avoids vanishing gradient</li>
+            <li><strong>Linear:</strong> <span class="inline-code">f(x)=x</span> — regression output layers</li>
+          </ul>
+          <div class="highlight-box gold">💡 Sigmoid preferred over step because it is differentiable, enabling gradient descent (backpropagation). The derivative f'(x) = f(x)·(1−f(x)) is non-zero everywhere.</div>
+        </div></div>
+      </div>
+
+      <div class="acc-item" data-topic="nn">
+        <button class="acc-header" onclick="toggleAcc(this)">
+          <span class="acc-num">2</span>
+          <span class="acc-label">Perceptron, XOR Problem &amp; Linear Separability</span>
+          <span class="acc-arrow">▾</span>
+        </button>
+        <div class="acc-body"><div class="acc-content">
+          <h4>Rosenblatt's Perceptron</h4>
+          <p>Single-layer network for binary classification with step activation. Uses the <strong>Perceptron Learning Rule</strong>:</p>
+          <code>Δwᵢ = η · (target − output) · xᵢ
+Δb  = η · (target − output)</code>
+          <p><strong>Convergence Theorem:</strong> Converges if problem is linearly separable and learning rate is small.</p>
+          <h4>Linear Separability</h4>
+          <p>A problem is linearly separable if all classes can be separated by a hyperplane.</p>
+          <div class="two-col">
+            <div class="mini-card" style="border-color:rgba(93,221,138,0.3)"><div class="mini-card-label" style="color:var(--green)">Linearly separable ✓</div>AND, OR functions</div>
+            <div class="mini-card" style="border-color:rgba(255,107,107,0.3)"><div class="mini-card-label" style="color:var(--coral)">NOT separable ✗</div>XOR function</div>
+          </div>
+          <h4>XOR Problem</h4>
+          <code>X₁  X₂ | Out
+ 0   0  |  0
+ 0   1  |  1
+ 1   0  |  1
+ 1   1  |  0</code>
+          <div class="highlight-box">XOR cannot be solved by single-layer perceptron — proved by Minsky &amp; Papert (1969), leading to the first "AI Winter". Required development of Multi-Layer Perceptrons.</div>
+          <h4>Mathematical Proof it's Impossible</h4>
+          <p>Assuming weights w₁, w₂, bias b can solve XOR leads to contradiction: w₁+w₂ &gt; 0 AND w₁+w₂ ≤ 0 simultaneously — impossible.</p>
+        </div></div>
+      </div>
+
+      <div class="acc-item" data-topic="nn">
+        <button class="acc-header" onclick="toggleAcc(this)">
+          <span class="acc-num">3</span>
+          <span class="acc-label">Multi-Layer Perceptron (MLP) &amp; Forward Propagation</span>
+          <span class="acc-arrow">▾</span>
+        </button>
+        <div class="acc-body"><div class="acc-content">
+          <h4>Architecture</h4>
+          <ul>
+            <li><strong>Input Layer:</strong> n neurons, no processing, passes input forward</li>
+            <li><strong>Hidden Layer(s):</strong> Learn internal feature representations (non-linear)</li>
+            <li><strong>Output Layer:</strong> k neurons, produces final predictions</li>
+          </ul>
+          <h4>Why MLP Solves XOR</h4>
+          <p>The hidden layer transforms the input space — creating new features (h₁, h₂) that ARE linearly separable. Output layer then draws a linear boundary in this transformed space.</p>
+          <div class="highlight-box teal">Universal Approximation Theorem: Any continuous function can be approximated arbitrarily closely by a network with one hidden layer with sufficient neurons and a non-linear activation.</div>
+          <h4>Forward Propagation Equations</h4>
+          <code>Hidden layer j:
+  net_j = Σ(w_ij · x_i) + b_j
+  h_j   = f(net_j)
+
+Output layer k:
+  net_k = Σ(w_jk · h_j) + b_k
+  y_k   = f(net_k)</code>
+        </div></div>
+      </div>
+
+      <div class="acc-item" data-topic="nn">
+        <button class="acc-header" onclick="toggleAcc(this)">
+          <span class="acc-num">4</span>
+          <span class="acc-label">Backpropagation Algorithm</span>
+          <span class="acc-arrow">▾</span>
+        </button>
+        <div class="acc-body"><div class="acc-content">
+          <h4>Purpose</h4>
+          <p>Adjusts weights and biases to minimize prediction error via gradient descent. Error is calculated at the output and propagated backward through the network.</p>
+          <h4>Error Function (MSE)</h4>
+          <code>E = ½ · Σ(target − output)²</code>
+          <h4>Error Signals (Deltas)</h4>
+          <code>Output layer k:
+  δₖ = (tₖ − oₖ) · f'(netₖ)
+
+Hidden layer j:
+  δⱼ = f'(netⱼ) · Σ(δₖ · wⱼₖ)</code>
+          <h4>Weight &amp; Bias Update</h4>
+          <code>Δw_ij = η · δⱼ · oᵢ
+w_ij(new) = w_ij + Δw_ij
+
+Δb_j = η · δⱼ
+b_j(new) = b_j + Δb_j</code>
+          <h4>Algorithm Steps</h4>
+          <ol style="padding-left:1.2rem;font-size:0.83rem;line-height:2">
+            <li>Initialize weights/biases (random small values)</li>
+            <li>For each training pattern: forward propagate</li>
+            <li>Calculate error at output</li>
+            <li>Backpropagate error to hidden layers</li>
+            <li>Update all weights and biases</li>
+            <li>Repeat until error &lt; threshold or max epochs</li>
+          </ol>
+          <div class="highlight-box">⚠ Problems: local minima, slow convergence, vanishing gradient, requires careful tuning of learning rate η (typical 0.01–0.1)</div>
+        </div></div>
+      </div>
+
+      <div class="acc-item" data-topic="nn">
+        <button class="acc-header" onclick="toggleAcc(this)">
+          <span class="acc-num">5</span>
+          <span class="acc-label">Hopfield Network &amp; Associative Memory</span>
+          <span class="acc-arrow">▾</span>
+        </button>
+        <div class="acc-body"><div class="acc-content">
+          <h4>Hopfield Network</h4>
+          <p>Recurrent, fully-connected network acting as auto-associative memory. Key properties:</p>
+          <ul>
+            <li>Symmetric weights: w_ij = w_ji</li>
+            <li>No self-connections: w_ii = 0</li>
+            <li>Binary or bipolar neurons</li>
+            <li>Capacity: ~0.15n patterns for n neurons</li>
+          </ul>
+          <code>Update rule:
+  xᵢ(t+1) = sign(Σ wᵢⱼ · xⱼ(t) + bᵢ)
+
+Hebbian weight learning:
+  wᵢⱼ = (1/n) · Σₖ pᵢᵏ · pⱼᵏ</code>
+          <div class="highlight-box gold">⚠ Spurious states: false attractors that are not stored patterns — a key limitation of Hopfield networks.</div>
+          <h4>Types of Associative Memory</h4>
+          <div class="two-col">
+            <div class="mini-card"><div class="mini-card-label">Auto-Associative</div>Retrieves full pattern from partial/noisy input (Hopfield)</div>
+            <div class="mini-card"><div class="mini-card-label">Hetero-Associative</div>Associates different patterns — given A, retrieve B (BAM)</div>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="acc-item" data-topic="nn">
+        <button class="acc-header" onclick="toggleAcc(this)">
+          <span class="acc-num">6</span>
+          <span class="acc-label">ADALINE &amp; MADALINE</span>
+          <span class="acc-arrow">▾</span>
+        </button>
+        <div class="acc-body"><div class="acc-content">
+          <h4>ADALINE (Adaptive Linear Neuron)</h4>
+          <p>Uses linear activation function and the <strong>Delta Rule (Widrow-Hoff)</strong> for learning. Update based on net input, not post-activation output.</p>
+          <code>Δwᵢ = η · (target − net) · xᵢ</code>
+          <div class="two-col">
+            <div class="mini-card"><div class="mini-card-label">ADALINE</div>Linear activation · Delta rule · continuous error minimization</div>
+            <div class="mini-card"><div class="mini-card-label">Perceptron</div>Step activation · Perceptron rule · binary update</div>
+          </div>
+          <h4>MADALINE (Many ADALINE)</h4>
+          <p>Network of multiple ADALINE units in the hidden layer. Can handle non-linearly separable problems. Uses MADALINE Rule: if output correct → no change; if wrong → adjust hidden units.</p>
+        </div></div>
+      </div>
+
+      <div class="acc-item" data-topic="fuzzy">
+        <button class="acc-header" onclick="toggleAcc(this)">
+          <span class="acc-num">7</span>
+          <span class="acc-label">Fuzzy Sets, Membership Functions &amp; Operations</span>
+          <span class="acc-arrow">▾</span>
+        </button>
+        <div class="acc-body"><div class="acc-content">
+          <h4>Crisp vs Fuzzy Sets</h4>
+          <div class="two-col">
+            <div class="mini-card"><div class="mini-card-label">Crisp Set</div>Binary: element belongs (1) or not (0) — sharp boundaries</div>
+            <div class="mini-card"><div class="mini-card-label">Fuzzy Set</div>Degree of membership 0–1 — soft boundaries, partial truth</div>
+          </div>
+          <h4>Membership Functions</h4>
+          <ul>
+            <li><strong>Triangular:</strong> peaks at b, zero at a and c</li>
+            <li><strong>Trapezoidal:</strong> flat top between b and c</li>
+            <li><strong>Gaussian:</strong> bell curve, controlled by center c and σ</li>
+            <li><strong>Bell Function:</strong> smoother variant</li>
+          </ul>
+          <h4>Fuzzy Operations</h4>
+          <code>Union (OR):        μ(A∪B) = max(μA, μB)
+Intersection (AND): μ(A∩B) = min(μA, μB)
+Complement (NOT):   μ(Ā)   = 1 − μA</code>
+          <h4>Linguistic Hedges</h4>
+          <code>Very/Highly:   μ_new = μ²      (narrows support)
+Somewhat/Quite: μ_new = √μ    (broadens support)
+Not:           μ_new = 1 − μ
+
+Example: Young = 0.6
+         Very Young = 0.6² = 0.36</code>
+        </div></div>
+      </div>
+
+    </div>
+
+    <br>
+    <p class="section-title">Module II — Advanced Fuzzy &amp; Genetic Algorithms</p>
+    <div class="accordion" id="acc-mod2">
+
+      <div class="acc-item" data-topic="fuzzy">
+        <button class="acc-header" onclick="toggleAcc(this)">
+          <span class="acc-num">8</span>
+          <span class="acc-label">Fuzzy Inference Systems &amp; Defuzzification</span>
+          <span class="acc-arrow">▾</span>
+        </button>
+        <div class="acc-body"><div class="acc-content">
+          <h4>Fuzzy System Pipeline</h4>
+          <code>Crisp Input → Fuzzification → Rule Engine → Aggregation → Defuzzification → Crisp Output</code>
+          <h4>Inference Process</h4>
+          <ol style="padding-left:1.2rem;font-size:0.83rem;line-height:2">
+            <li><strong>Fuzzification:</strong> Convert crisp input to membership values</li>
+            <li><strong>Rule Evaluation:</strong> Fire IF-THEN rules, compute confidence</li>
+            <li><strong>Aggregation:</strong> Combine rule outputs using max (union)</li>
+            <li><strong>Defuzzification:</strong> Convert fuzzy output to crisp value</li>
+          </ol>
+          <h4>Defuzzification Methods</h4>
+          <code>Centroid (Center of Area):
+  y* = Σ(y · μ(y)) / Σμ(y)    ← most accurate
+
+Maximum Method:
+  y* = value with highest membership
+
+Mean of Maximum (MOM):
+  y* = average of all maximum-membership values</code>
+          <div class="highlight-box teal">Example (Centroid):
+Low(0.2)=10, Medium(0.5)=20, High(0.3)=30
+y* = (10×0.2 + 20×0.5 + 30×0.3) / (0.2+0.5+0.3) = 21/1.0 = 21</div>
+          <h4>T-Norms (AND) &amp; T-Conorms (OR)</h4>
+          <div class="two-col">
+            <div class="mini-card"><div class="mini-card-label">T-Norms (AND)</div>Min: min(a,b)<br>Product: a×b<br>Bounded: max(0,a+b−1)</div>
+            <div class="mini-card"><div class="mini-card-label">T-Conorms (OR)</div>Max: max(a,b)<br>Algebraic: a+b−a×b<br>Bounded: min(1,a+b)</div>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="acc-item" data-topic="ga">
+        <button class="acc-header" onclick="toggleAcc(this)">
+          <span class="acc-num">9</span>
+          <span class="acc-label">Genetic Algorithms — Fundamentals</span>
+          <span class="acc-arrow">▾</span>
+        </button>
+        <div class="acc-body"><div class="acc-content">
+          <h4>Core Concept</h4>
+          <p>Evolutionary algorithm inspired by Darwin's natural selection and Mendel's genetics. Maintains a population of candidate solutions that improve over generations.</p>
+          <div class="two-col">
+            <div class="mini-card"><div class="mini-card-label">Natural</div>Population · Genes · Fitness · Selection · Mutation</div>
+            <div class="mini-card"><div class="mini-card-label">GA Parallel</div>Solutions · Params · Obj. function · Choose good · Random change</div>
+          </div>
+          <h4>GA Encoding Schemes</h4>
+          <code>Binary:      [1,0,1,0,1]        ← classic, parameter opt.
+Real-Valued: [2.5, 3.2, 1.8]    ← continuous problems
+Permutation: [3,1,4,2,5]        ← TSP, ordering
+Tree:        (x+5)*(y-2)        ← symbolic regression</code>
+          <h4>Key Parameters</h4>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;">
+            <div class="mini-card"><div class="mini-card-label">Pop. size</div>20–100 typical</div>
+            <div class="mini-card"><div class="mini-card-label">Generations</div>100–1000</div>
+            <div class="mini-card"><div class="mini-card-label">P_crossover</div>0.7–0.9</div>
+            <div class="mini-card"><div class="mini-card-label">P_mutation</div>0.01–0.1</div>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="acc-item" data-topic="ga">
+        <button class="acc-header" onclick="toggleAcc(this)">
+          <span class="acc-num">10</span>
+          <span class="acc-label">GA Operators — Selection, Crossover, Mutation</span>
+          <span class="acc-arrow">▾</span>
+        </button>
+        <div class="acc-body"><div class="acc-content">
+          <h4>Selection Methods</h4>
+          <code>Roulette Wheel: P(i) = fitness(i) / Σfitness
+  → Proportional to fitness value
+
+Rank Selection: 
+  → Sort by fitness, probability based on rank
+
+Tournament: 
+  → Pick k random individuals, choose best</code>
+          <h4>Crossover Operators</h4>
+          <code>Single-Point (binary):
+  Parent1: [1 0 | 1 0 1]
+  Parent2: [0 1 | 0 1 0]
+  Child1:  [1 0 | 0 1 0]
+  Child2:  [0 1 | 1 0 1]
+
+Arithmetic (real-valued):
+  Child = α·P1 + (1-α)·P2
+
+Order Crossover OX (permutation):
+  Copy middle segment from P1, fill from P2</code>
+          <h4>Mutation Operators</h4>
+          <code>Bit-Flip (binary):   flip bit if random() &lt; p_m
+Gaussian (real):     x_new = x_old + N(0, σ²)
+Swap (permutation):  swap two random positions</code>
+          <div class="highlight-box gold">Memory Aid: High P_crossover (0.7–0.9) explores new solutions. Low P_mutation (0.01–0.1) preserves good ones. Too much mutation → random search.</div>
+        </div></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── FORMULAS ─── -->
+  <section id="panel-formulas" class="panel">
+    <p class="section-title">Formula Sheet</p>
+    <div class="formula-grid">
+
+      <div class="formula-card">
+        <div class="formula-cat">neural networks</div>
+        <div class="formula-name">Neuron Net Input</div>
+        <div class="formula-eq">NET = Σ(wᵢ · xᵢ) + b
+y = f(NET)</div>
+        <div class="formula-note">xᵢ = inputs, wᵢ = weights, b = bias, f = activation</div>
+      </div>
+
+      <div class="formula-card">
+        <div class="formula-cat">activation functions</div>
+        <div class="formula-name">Sigmoid &amp; Derivative</div>
+        <div class="formula-eq">σ(x) = 1 / (1 + e^(-x))
+σ'(x) = σ(x) · (1 - σ(x))</div>
+        <div class="formula-note">Output ∈ (0,1) · Smooth · Differentiable everywhere</div>
+      </div>
+
+      <div class="formula-card">
+        <div class="formula-cat">activation functions</div>
+        <div class="formula-name">Tanh &amp; Derivative</div>
+        <div class="formula-eq">tanh(x) = (eˣ - e⁻ˣ) / (eˣ + e⁻ˣ)
+tanh'(x) = 1 - tanh(x)²</div>
+        <div class="formula-note">Output ∈ (−1,1) · Zero-centered · Stronger gradients</div>
+      </div>
+
+      <div class="formula-card">
+        <div class="formula-cat">activation functions</div>
+        <div class="formula-name">ReLU</div>
+        <div class="formula-eq">f(x) = max(0, x)
+f'(x) = 1 if x>0, else 0</div>
+        <div class="formula-note">Avoids vanishing gradient · Computationally efficient</div>
+      </div>
+
+      <div class="formula-card">
+        <div class="formula-cat">backpropagation</div>
+        <div class="formula-name">Error Function (MSE)</div>
+        <div class="formula-eq">E = ½ · Σ(tₖ - oₖ)²</div>
+        <div class="formula-note">tₖ = target, oₖ = actual output. Goal: minimize E.</div>
+      </div>
+
+      <div class="formula-card">
+        <div class="formula-cat">backpropagation</div>
+        <div class="formula-name">Output Layer Delta</div>
+        <div class="formula-eq">δₖ = (tₖ - oₖ) · f'(netₖ)</div>
+        <div class="formula-note">Error signal at output neuron k</div>
+      </div>
+
+      <div class="formula-card">
+        <div class="formula-cat">backpropagation</div>
+        <div class="formula-name">Hidden Layer Delta</div>
+        <div class="formula-eq">δⱼ = f'(netⱼ) · Σₖ(δₖ · wⱼₖ)</div>
+        <div class="formula-note">Chain rule: error flows back through weights</div>
+      </div>
+
+      <div class="formula-card">
+        <div class="formula-cat">backpropagation</div>
+        <div class="formula-name">Weight &amp; Bias Update</div>
+        <div class="formula-eq">Δwᵢⱼ = η · δⱼ · oᵢ
+Δbⱼ  = η · δⱼ</div>
+        <div class="formula-note">η = learning rate (0.01–0.1 typical)</div>
+      </div>
+
+      <div class="formula-card">
+        <div class="formula-cat">perceptron</div>
+        <div class="formula-name">Perceptron Learning Rule</div>
+        <div class="formula-eq">Δwᵢ = η · (t - y) · xᵢ
+Δb  = η · (t - y)</div>
+        <div class="formula-note">t = target, y = actual output (step function)</div>
+      </div>
+
+      <div class="formula-card">
+        <div class="formula-cat">adaline</div>
+        <div class="formula-name">Delta Rule (Widrow-Hoff)</div>
+        <div class="formula-eq">Δwᵢ = η · (t - net) · xᵢ</div>
+        <div class="formula-note">Uses net (linear output), not post-activation</div>
+      </div>
+
+      <div class="formula-card">
+        <div class="formula-cat">hopfield network</div>
+        <div class="formula-name">Hebbian Weight Learning</div>
+        <div class="formula-eq">wᵢⱼ = (1/n) · Σₖ pᵢᵏ · pⱼᵏ
+wᵢᵢ = 0 (no self-connection)</div>
+        <div class="formula-note">pᵢᵏ = i-th component of k-th stored pattern</div>
+      </div>
+
+      <div class="formula-card">
+        <div class="formula-cat">fuzzy logic</div>
+        <div class="formula-name">Fuzzy Operations</div>
+        <div class="formula-eq">Union (OR):  max(μA, μB)
+Intersect:   min(μA, μB)
+Complement:  1 - μA</div>
+        <div class="formula-note">AND=min (restrictive), OR=max (lenient)</div>
+      </div>
+
+      <div class="formula-card">
+        <div class="formula-cat">fuzzy logic</div>
+        <div class="formula-name">Linguistic Hedges</div>
+        <div class="formula-eq">Very:      μ² (narrows)
+Somewhat:  √μ (broadens)
+Not:       1 - μ</div>
+        <div class="formula-note">Example: Young=0.6 → Very Young=0.36</div>
+      </div>
+
+      <div class="formula-card">
+        <div class="formula-cat">defuzzification</div>
+        <div class="formula-name">Centroid Method</div>
+        <div class="formula-eq">y* = Σ(y · μ(y)) / Σμ(y)</div>
+        <div class="formula-note">Most accurate, most computationally expensive</div>
+      </div>
+
+      <div class="formula-card">
+        <div class="formula-cat">t-norms</div>
+        <div class="formula-name">T-Norm Family (AND)</div>
+        <div class="formula-eq">Min:          min(a,b)
+Product:      a × b
+Bounded:      max(0, a+b-1)
+Drastic:      a if b=1, b if a=1, else 0</div>
+        <div class="formula-note">Min is the most common T-norm</div>
+      </div>
+
+      <div class="formula-card">
+        <div class="formula-cat">genetic algorithm</div>
+        <div class="formula-name">Roulette Selection Probability</div>
+        <div class="formula-eq">P(i) = fitness(i) / Σ fitness(all)</div>
+        <div class="formula-note">Higher fitness → higher selection probability</div>
+      </div>
+
+      <div class="formula-card">
+        <div class="formula-cat">genetic algorithm</div>
+        <div class="formula-name">Single-Point Crossover</div>
+        <div class="formula-eq">Child1 = P1[0:pt] + P2[pt:end]
+Child2 = P2[0:pt] + P1[pt:end]</div>
+        <div class="formula-note">pt = random crossover point</div>
+      </div>
+
+      <div class="formula-card">
+        <div class="formula-cat">genetic algorithm</div>
+        <div class="formula-name">Mutation Operators</div>
+        <div class="formula-eq">Bit-Flip: if rand() &lt; pₘ: bit = 1−bit
+Gaussian: x_new = x_old + N(0,σ²)
+Swap:     swap two random positions</div>
+        <div class="formula-note">pₘ typical: 0.01–0.1, often 1/chromosome_length</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── Q&A ─── -->
+  <section id="panel-qa" class="panel">
+    <p class="section-title">Question &amp; Answer Bank</p>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterQA('all', this)">All Topics</button>
+      <button class="filter-btn" onclick="filterQA('nn', this)">Neural Networks</button>
+      <button class="filter-btn" onclick="filterQA('mlp', this)">MLP &amp; Backprop</button>
+      <button class="filter-btn" onclick="filterQA('fuzzy', this)">Fuzzy Logic</button>
+      <button class="filter-btn" onclick="filterQA('ga', this)">Genetic Algo.</button>
+      <button class="filter-btn" onclick="filterQA('mem', this)">Associative Memory</button>
+    </div>
+
+    <div class="qa-grid">
+
+      <div class="qa-card" data-topic="nn">
+        <button class="qa-q" onclick="toggleQA(this)">
+          <span class="qa-qnum">Q1</span>
+          <span class="qa-qtext">What is soft computing? State its main techniques.</span>
+          <span class="qa-marks">2–3 marks</span>
+        </button>
+        <div class="qa-ans"><div class="qa-ans-body">
+          <span class="ans-tag">Answer</span>
+          <p><strong>Soft Computing</strong> is a collection of computational techniques inspired by nature that tolerate imprecision, uncertainty, and partial truth to achieve robust, low-cost solutions to complex problems.</p>
+          <p><strong>Main Techniques:</strong></p>
+          <ul>
+            <li><strong>ANN:</strong> Models learning based on biological neurons</li>
+            <li><strong>Fuzzy Logic:</strong> Handles vague and uncertain information</li>
+            <li><strong>Genetic Algorithms:</strong> Evolution-based optimization</li>
+            <li><strong>Hybrid Systems:</strong> Combinations of the above</li>
+          </ul>
+        </div></div>
+      </div>
+
+      <div class="qa-card" data-topic="nn">
+        <button class="qa-q" onclick="toggleQA(this)">
+          <span class="qa-qnum">Q2</span>
+          <span class="qa-qtext">Compare biological neuron with artificial neuron.</span>
+          <span class="qa-marks">3 marks</span>
+        </button>
+        <div class="qa-ans"><div class="qa-ans-body">
+          <span class="ans-tag">Answer</span>
+          <div style="overflow-x:auto">
+            <table style="width:100%;border-collapse:collapse;font-size:0.8rem">
+              <thead><tr style="border-bottom:1px solid var(--border)">
+                <th style="padding:6px 10px;text-align:left;color:var(--text3);font-weight:500">Aspect</th>
+                <th style="padding:6px 10px;text-align:left;color:var(--text3);font-weight:500">Biological</th>
+                <th style="padding:6px 10px;text-align:left;color:var(--text3);font-weight:500">Artificial</th>
+              </tr></thead>
+              <tbody>
+                <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px 10px;color:var(--text2)">Inputs</td><td style="padding:6px 10px">Dendrites</td><td style="padding:6px 10px">x₁, x₂, …</td></tr>
+                <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px 10px;color:var(--text2)">Weights</td><td style="padding:6px 10px">Synaptic strength</td><td style="padding:6px 10px">w₁, w₂, …</td></tr>
+                <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px 10px;color:var(--text2)">Processing</td><td style="padding:6px 10px">Electrochemical</td><td style="padding:6px 10px">Weighted sum</td></tr>
+                <tr><td style="padding:6px 10px;color:var(--text2)">Activation</td><td style="padding:6px 10px">Threshold firing</td><td style="padding:6px 10px">f(NET)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="qa-card" data-topic="nn">
+        <button class="qa-q" onclick="toggleQA(this)">
+          <span class="qa-qnum">Q5</span>
+          <span class="qa-qtext">Why is sigmoid preferred over step function in neural networks?</span>
+          <span class="qa-marks">4 marks</span>
+        </button>
+        <div class="qa-ans"><div class="qa-ans-body">
+          <span class="ans-tag">Answer</span>
+          <p><strong>1. Differentiability:</strong> Step function is not differentiable at the threshold. Backpropagation requires df/dx for weight updates — sigmoid is differentiable everywhere.</p>
+          <p><strong>2. Gradient information:</strong> Step derivative = 0 almost everywhere. Sigmoid derivative f'(x) = f(x)·(1−f(x)) is non-zero, enabling gradient descent.</p>
+          <p><strong>3. Continuous output:</strong> Step gives binary {0,1}. Sigmoid gives continuous (0,1) — carries more information for finer weight adjustments.</p>
+          <p><strong>4. Error correction:</strong> With sigmoid, error signal = (target−output)·f'(x) is proportional to error magnitude — larger error → stronger signal → faster correction.</p>
+        </div></div>
+      </div>
+
+      <div class="qa-card" data-topic="nn">
+        <button class="qa-q" onclick="toggleQA(this)">
+          <span class="qa-qnum">Q8</span>
+          <span class="qa-qtext">Define linear separability with examples.</span>
+          <span class="qa-marks">3 marks</span>
+        </button>
+        <div class="qa-ans"><div class="qa-ans-body">
+          <span class="ans-tag">Answer</span>
+          <p><strong>Linear Separability:</strong> A classification problem is linearly separable if all classes can be separated by a straight line (2D) or hyperplane (nD) without misclassification.</p>
+          <p><strong>Linearly Separable (AND):</strong> Only (1,1)→1, all others→0. A line like x₁+x₂=1.5 separates perfectly.</p>
+          <p><strong>NOT Linearly Separable (XOR):</strong> (0,1)→1 and (1,0)→1, but (0,0)→0 and (1,1)→0. No single straight line can separate 1-outputs from 0-outputs.</p>
+        </div></div>
+      </div>
+
+      <div class="qa-card" data-topic="mlp">
+        <button class="qa-q" onclick="toggleQA(this)">
+          <span class="qa-qnum">Q9</span>
+          <span class="qa-qtext">Why can't single-layer perceptron solve XOR? Prove it.</span>
+          <span class="qa-marks">6 marks</span>
+        </button>
+        <div class="qa-ans"><div class="qa-ans-body">
+          <span class="ans-tag">Answer</span>
+          <p><strong>Reason:</strong> A single-layer perceptron creates only a linear decision boundary (w₁x₁+w₂x₂+b=0 — a straight line). XOR requires a non-linear boundary.</p>
+          <p><strong>Mathematical Proof:</strong></p>
+          <code style="color:var(--coral)">For (0,0)→0: b ≤ 0              ... (1)
+For (1,1)→0: w₁+w₂+b ≤ 0      ... (2)
+For (0,1)→1: w₂+b > 0  → w₂>−b ≥ 0
+For (1,0)→1: w₁+b > 0  → w₁>−b ≥ 0
+
+∴ w₁+w₂ > 0
+But from (2): w₁+w₂ ≤ −b ≤ 0
+
+CONTRADICTION! Cannot solve XOR.</code>
+          <p><strong>Solution:</strong> Use Multi-Layer Perceptron — hidden layer transforms input space into one that IS linearly separable.</p>
+        </div></div>
+      </div>
+
+      <div class="qa-card" data-topic="mlp">
+        <button class="qa-q" onclick="toggleQA(this)">
+          <span class="qa-qnum">Q12</span>
+          <span class="qa-qtext">Why can MLP solve XOR but perceptron cannot?</span>
+          <span class="qa-marks">5 marks</span>
+        </button>
+        <div class="qa-ans"><div class="qa-ans-body">
+          <span class="ans-tag">Answer</span>
+          <p>The hidden layer of an MLP acts as a <strong>feature extractor</strong>, transforming the original input space into a new representation.</p>
+          <p>In the original XOR space, (0,1) and (1,0) cannot be separated from (0,0) and (1,1) by a line. The hidden layer learns weights that map these 4 points into a new (h₁,h₂) space where they ARE linearly separable.</p>
+          <p>The output layer then draws a simple linear boundary in this transformed space.</p>
+          <p>This is validated by the <strong>Universal Approximation Theorem</strong>: any continuous function can be approximated by a network with one hidden layer and sufficient neurons.</p>
+        </div></div>
+      </div>
+
+      <div class="qa-card" data-topic="mlp">
+        <button class="qa-q" onclick="toggleQA(this)">
+          <span class="qa-qnum">Q16</span>
+          <span class="qa-qtext">Explain the backpropagation algorithm with equations.</span>
+          <span class="qa-marks">8 marks</span>
+        </button>
+        <div class="qa-ans"><div class="qa-ans-body">
+          <span class="ans-tag">Answer</span>
+          <p><strong>Purpose:</strong> Adjust weights/biases to minimize E = ½Σ(t−o)² using gradient descent.</p>
+          <p><strong>Forward Pass:</strong> Compute outputs layer by layer using y=f(Σwᵢxᵢ+b).</p>
+          <p><strong>Backward Pass — Error Signals:</strong></p>
+          <code>Output:  δₖ = (tₖ−oₖ)·f'(netₖ)
+Hidden:  δⱼ = f'(netⱼ)·Σₖ(δₖ·wⱼₖ)</code>
+          <p><strong>Weight Update:</strong></p>
+          <code>Δwᵢⱼ = η·δⱼ·oᵢ
+Δbⱼ  = η·δⱼ</code>
+          <p><strong>Why differentiable activation is needed:</strong> f'(netₖ) appears in every delta formula. If f is step function, f'=0 everywhere → no learning.</p>
+          <p><strong>Problems:</strong> Local minima, slow convergence, vanishing gradient in deep networks.</p>
+        </div></div>
+      </div>
+
+      <div class="qa-card" data-topic="mem">
+        <button class="qa-q" onclick="toggleQA(this)">
+          <span class="qa-qnum">Q23</span>
+          <span class="qa-qtext">What is a Hopfield network? Give its key characteristics.</span>
+          <span class="qa-marks">4 marks</span>
+        </button>
+        <div class="qa-ans"><div class="qa-ans-body">
+          <span class="ans-tag">Answer</span>
+          <p><strong>Hopfield network</strong> is a recurrent, fully-connected neural network used as auto-associative memory — it can recall complete stored patterns from partial or noisy inputs.</p>
+          <p><strong>Key Characteristics:</strong></p>
+          <ul>
+            <li>Fully connected: each neuron connects to every other</li>
+            <li>Symmetric weights: wᵢⱼ = wⱼᵢ</li>
+            <li>No self-connections: wᵢᵢ = 0</li>
+            <li>Binary or bipolar neurons</li>
+            <li>Capacity: ~0.15n patterns for n neurons</li>
+          </ul>
+          <p><strong>Weight learning (Hebbian):</strong> wᵢⱼ = (1/n)·Σₖ pᵢᵏ·pⱼᵏ</p>
+          <p><strong>Limitation:</strong> Spurious states — false attractors that are not stored patterns.</p>
+        </div></div>
+      </div>
+
+      <div class="qa-card" data-topic="fuzzy">
+        <button class="qa-q" onclick="toggleQA(this)">
+          <span class="qa-qnum">Q31</span>
+          <span class="qa-qtext">Distinguish crisp sets and fuzzy sets with examples.</span>
+          <span class="qa-marks">3 marks</span>
+        </button>
+        <div class="qa-ans"><div class="qa-ans-body">
+          <span class="ans-tag">Answer</span>
+          <p><strong>Crisp Set:</strong> An element either belongs (1) or doesn't (0). Sharp boundary. Boolean logic.</p>
+          <p><strong>Fuzzy Set:</strong> Elements have a degree of membership between 0 and 1. Soft boundary. Partial truth.</p>
+          <code>Example — "Young":
+Crisp: Age &lt;30 → 1, Age ≥30 → 0
+Fuzzy: Age 20→0.9, Age 30→0.5, Age 40→0.1</code>
+          <p>Fuzzy sets better model real-world concepts where boundaries are gradual rather than sharp.</p>
+        </div></div>
+      </div>
+
+      <div class="qa-card" data-topic="fuzzy">
+        <button class="qa-q" onclick="toggleQA(this)">
+          <span class="qa-qnum">Calc</span>
+          <span class="qa-qtext">Centroid defuzzification: Low(0.2)=10, Medium(0.5)=20, High(0.3)=30</span>
+          <span class="qa-marks">calc</span>
+        </button>
+        <div class="qa-ans"><div class="qa-ans-body">
+          <span class="ans-tag">Worked Example</span>
+          <code>Numerator:   10×0.2 + 20×0.5 + 30×0.3
+           = 2 + 10 + 9 = 21
+
+Denominator: 0.2 + 0.5 + 0.3 = 1.0
+
+y* = 21 / 1.0 = 21</code>
+          <p><strong>Answer: 21</strong></p>
+        </div></div>
+      </div>
+
+      <div class="qa-card" data-topic="ga">
+        <button class="qa-q" onclick="toggleQA(this)">
+          <span class="qa-qnum">Calc</span>
+          <span class="qa-qtext">GA roulette selection: fitness values 10, 25, 15 — find probabilities.</span>
+          <span class="qa-marks">calc</span>
+        </button>
+        <div class="qa-ans"><div class="qa-ans-body">
+          <span class="ans-tag">Worked Example</span>
+          <code>Total = 10 + 25 + 15 = 50
+
+P₁ = 10/50 = 0.20 (20%)
+P₂ = 25/50 = 0.50 (50%) ← most likely
+P₃ = 15/50 = 0.30 (30%)</code>
+          <p>Individual 2 with fitness 25 has the highest selection probability at 50%.</p>
+        </div></div>
+      </div>
+
+      <div class="qa-card" data-topic="ga">
+        <button class="qa-q" onclick="toggleQA(this)">
+          <span class="qa-qnum">Q</span>
+          <span class="qa-qtext">Explain the four encoding schemes in Genetic Algorithms.</span>
+          <span class="qa-marks">6 marks</span>
+        </button>
+        <div class="qa-ans"><div class="qa-ans-body">
+          <span class="ans-tag">Answer</span>
+          <p><strong>1. Binary:</strong> String of 0s and 1s. Most common. Simple GA operations. Can cause Hamming cliffs.</p>
+          <p><strong>2. Real-Valued:</strong> Vector of real numbers. Natural for continuous optimization. Better precision. Requires Gaussian mutation.</p>
+          <p><strong>3. Permutation:</strong> Ordering of integers (e.g., [2,4,1,5,3] for TSP). Crossover/mutation must preserve valid permutations (Order Crossover, Swap Mutation).</p>
+          <p><strong>4. Tree (for Genetic Programming):</strong> Tree structure of operators and terminals. Natural for symbolic expressions. Risk of bloat (trees growing too large).</p>
+        </div></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── EXAM PREP ─── -->
+  <section id="panel-exam" class="panel">
+    <p class="section-title">Exam Strategy</p>
+
+    <div class="tips-grid">
+      <div class="tip-card">
+        <div class="tip-icon">⏱</div>
+        <div class="tip-title">Time Management</div>
+        <div class="tip-body">3 hours total. Skim all questions first. Don't spend more than 15 min on any single question. Start with easier ones.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">📐</div>
+        <div class="tip-title">Show Your Working</div>
+        <div class="tip-body">Write equations on separate lines, define all variables, show numerical substitution step by step — marks awarded for method.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🎨</div>
+        <div class="tip-title">Draw Diagrams</div>
+        <div class="tip-body">Neural network architecture, XOR decision boundary, membership function plots, GA flowchart — diagrams earn extra marks.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">✍</div>
+        <div class="tip-title">Use Examples</div>
+        <div class="tip-body">Concrete numerical examples demonstrate deeper understanding than abstract definitions alone. Include examples in longer answers.</div>
+      </div>
+    </div>
+
+    <p class="section-title">Time Plan (3-Hour Exam)</p>
+    <div class="time-table">
+      <div class="time-row">
+        <div class="time-section">Section A — 3 Comprehensive Questions</div>
+        <div class="time-marks">3 × 8 = 24 marks</div>
+        <div class="time-mins">~45 minutes</div>
+      </div>
+      <div class="time-row">
+        <div class="time-section">Section B — 6 Design/Implementation Questions</div>
+        <div class="time-marks">6 × 6 = 36 marks</div>
+        <div class="time-mins">~60 minutes</div>
+      </div>
+      <div class="time-row">
+        <div class="time-section">Section C — 10 Short Answer Questions</div>
+        <div class="time-marks">10 × 2 = 20 marks</div>
+        <div class="time-mins">~20 minutes</div>
+      </div>
+      <div class="time-row" style="background:rgba(124,106,255,0.05)">
+        <div class="time-section">Review &amp; Check</div>
+        <div class="time-marks">—</div>
+        <div class="time-mins">~15 minutes</div>
+      </div>
+    </div>
+
+    <p class="section-title">Priority Topics</p>
+    <div class="priority-list">
+      <div class="priority-item"><span class="priority-badge p-high">★★★ HIGH</span><span class="priority-text">Backpropagation — complete derivation, all equations, traced example</span><span class="priority-marks">8–10 marks</span></div>
+      <div class="priority-item"><span class="priority-badge p-high">★★★ HIGH</span><span class="priority-text">XOR Problem — why perceptron fails, proof, how MLP solves with geometry</span><span class="priority-marks">4–6 marks</span></div>
+      <div class="priority-item"><span class="priority-badge p-high">★★★ HIGH</span><span class="priority-text">Fuzzy System — membership functions, fuzzification, defuzzification</span><span class="priority-marks">6–8 marks</span></div>
+      <div class="priority-item"><span class="priority-badge p-high">★★★ HIGH</span><span class="priority-text">Genetic Algorithm — encoding, crossover, mutation, selection operators</span><span class="priority-marks">6–8 marks</span></div>
+      <div class="priority-item"><span class="priority-badge p-high">★★★ HIGH</span><span class="priority-text">Neural Network Architectures — Perceptron, MLP, Hopfield, ADALINE</span><span class="priority-marks">4–6 marks</span></div>
+      <div class="priority-item"><span class="priority-badge p-med">★★ MED</span><span class="priority-text">Perceptron vs ADALINE — activation, learning rule differences</span><span class="priority-marks">3–4 marks</span></div>
+      <div class="priority-item"><span class="priority-badge p-med">★★ MED</span><span class="priority-text">Defuzzification methods — centroid formula + worked examples</span><span class="priority-marks">3–4 marks</span></div>
+      <div class="priority-item"><span class="priority-badge p-med">★★ MED</span><span class="priority-text">Fuzzy rule-based systems — fuzzy inference (GMP, GMT)</span><span class="priority-marks">3–4 marks</span></div>
+      <div class="priority-item"><span class="priority-badge p-low">★ LOW</span><span class="priority-text">Genetic Programming — tree representation, differences from GA</span><span class="priority-marks">2–3 marks</span></div>
+      <div class="priority-item"><span class="priority-badge p-low">★ LOW</span><span class="priority-text">T-norms detailed comparison, MADALINE networks, Hetero-associative</span><span class="priority-marks">2–3 marks</span></div>
+    </div>
+
+    <p class="section-title">Common Mistakes to Avoid</p>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div class="priority-item" style="border-color:rgba(255,107,107,0.25)"><span style="color:var(--coral);font-size:1rem">✗</span><span class="priority-text"><strong>Confusing Perceptron with Backprop</strong> — Perceptron uses step function, backprop needs sigmoid/tanh for differentiability.</span></div>
+      <div class="priority-item" style="border-color:rgba(255,107,107,0.25)"><span style="color:var(--coral);font-size:1rem">✗</span><span class="priority-text"><strong>Wrong Fuzzy Operations</strong> — AND = min (NOT max), OR = max (NOT min). Mnemonic: AND is more restrictive.</span></div>
+      <div class="priority-item" style="border-color:rgba(255,107,107,0.25)"><span style="color:var(--coral);font-size:1rem">✗</span><span class="priority-text"><strong>Incomplete XOR answer</strong> — Just saying "use MLP" is not enough. Explain feature transformation and geometric interpretation.</span></div>
+      <div class="priority-item" style="border-color:rgba(255,107,107,0.25)"><span style="color:var(--coral);font-size:1rem">✗</span><span class="priority-text"><strong>GA parameter confusion</strong> — High P_crossover explores solutions; low P_mutation preserves good ones. Don't mix them up.</span></div>
+      <div class="priority-item" style="border-color:rgba(255,107,107,0.25)"><span style="color:var(--coral);font-size:1rem">✗</span><span class="priority-text"><strong>Forgetting to define variables</strong> — Every symbol in a formula must be defined (η, δ, w, b, etc.) — marks are given for definitions.</span></div>
+    </div>
+  </section>
+
+  <!-- ─── PROGRESS ─── -->
+  <section id="panel-progress" class="panel">
+    <p class="section-title">Revision Tracker</p>
+    <div class="progress-bar-wrap">
+      <div class="progress-label">
+        <span class="progress-label-text" id="prog-label">0 of 20 topics completed</span>
+        <span class="progress-pct" id="prog-pct">0%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:2rem;">
+      <div>
+        <div style="font-size:0.75rem;color:var(--text3);margin-bottom:10px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.06em;">Neural Networks</div>
+        <div class="checklist" id="checklist-nn">
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Artificial neuron model &amp; activation functions</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Perceptron learning rule &amp; convergence</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">XOR problem — proof &amp; geometric explanation</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">MLP architecture &amp; forward propagation</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Backpropagation — all formulas</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Learning rate problems &amp; solutions</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Hopfield network &amp; Hebbian learning</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">ADALINE vs Perceptron differences</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">MADALINE architecture</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Bidirectional associative memory (BAM)</div></div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:0.75rem;color:var(--text3);margin-bottom:10px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.06em;">Fuzzy Logic &amp; GA</div>
+        <div class="checklist" id="checklist-fuzzy">
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Fuzzy sets vs crisp sets</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Membership functions (3 types)</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Fuzzy operations: union, intersection, complement</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Linguistic hedges: very, somewhat, not</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Fuzzification &amp; defuzzification (centroid)</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Fuzzy inference (GMP, GMT)</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">T-norms and T-conorms</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">GA encoding schemes (4 types)</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">GA selection methods</div></div>
+          <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Crossover &amp; mutation operators</div></div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:1.5rem;">
+      <button onclick="resetProgress()" style="background:none;border:1px solid var(--border);color:var(--text3);padding:8px 20px;border-radius:100px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.82rem;transition:all 0.2s" onmouseover="this.style.borderColor='var(--border2)'" onmouseout="this.style.borderColor='var(--border)'">Reset Progress</button>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  Soft Computing — BCSE 0103 · Study App · All formulas and content based on course materials
+</footer>
+
+<script>
+function switchTab(tab) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  const tabs = ['overview','notes','formulas','qa','exam','progress'];
+  const idx = tabs.indexOf(tab);
+  document.querySelectorAll('.tab')[idx].classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function toggleAcc(btn) {
+  const item = btn.closest('.acc-item');
+  const wasOpen = item.classList.contains('open');
+  item.classList.toggle('open', !wasOpen);
+}
+
+function toggleQA(btn) {
+  const card = btn.closest('.qa-card');
+  card.classList.toggle('open');
+}
+
+function filterQA(topic, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.qa-card').forEach(card => {
+    if (topic === 'all' || card.dataset.topic === topic) {
+      card.style.display = '';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+function toggleCheck(item) {
+  item.classList.toggle('done');
+  updateProgress();
+  saveProgress();
+}
+
+function updateProgress() {
+  const all = document.querySelectorAll('.check-item');
+  const done = document.querySelectorAll('.check-item.done');
+  const pct = Math.round((done.length / all.length) * 100);
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('prog-label').textContent = done.length + ' of ' + all.length + ' topics completed';
+  document.getElementById('prog-fill').style.width = pct + '%';
+}
+
+function saveProgress() {
+  const states = [];
+  document.querySelectorAll('.check-item').forEach(item => {
+    states.push(item.classList.contains('done') ? '1' : '0');
+  });
+  try { localStorage.setItem('sc_progress', states.join(',')); } catch(e) {}
+}
+
+function loadProgress() {
+  try {
+    const saved = localStorage.getItem('sc_progress');
+    if (!saved) return;
+    const states = saved.split(',');
+    const items = document.querySelectorAll('.check-item');
+    states.forEach((s, i) => {
+      if (s === '1' && items[i]) items[i].classList.add('done');
+    });
+    updateProgress();
+  } catch(e) {}
+}
+
+function resetProgress() {
+  document.querySelectorAll('.check-item').forEach(item => item.classList.remove('done'));
+  updateProgress();
+  try { localStorage.removeItem('sc_progress'); } catch(e) {}
+}
+
+loadProgress();
+</script>
+
+</body>
+</html>
